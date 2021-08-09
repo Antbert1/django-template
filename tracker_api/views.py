@@ -24,8 +24,6 @@ class AnswerViewSet(viewsets.ModelViewSet):
         currentDate = datetime.date.today()
         data = request.data
         is_many = isinstance(request.data, list)
-        print("*****")
-        # print(data[0])
         if not is_many:
 
             newObj, created = Answer.objects.update_or_create(
@@ -46,3 +44,22 @@ class AnswerViewSet(viewsets.ModelViewSet):
             headers = self.get_success_headers(serializer.data)
 
             return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+
+    def get_queryset(self):
+        question = self.request.query_params.get('question')
+        date= self.request.query_params.get('date')
+
+        if (date != None and question != None):
+            queryset = Answer.objects.filter(question=question, date=date)
+        elif (date != None and question == None):
+            queryset = Answer.objects.filter(date=date)
+        elif (date == None and question != None):
+            queryset = Answer.objects.filter(question=question)
+        else:
+            queryset = Answer.objects.all()
+
+
+        
+
+        return queryset
