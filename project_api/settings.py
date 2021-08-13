@@ -32,7 +32,10 @@ if os.path.isfile(dotenv_file):
 SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+if RUNNING_DEVSERVER:
+    DEBUG = True
+else:
+    DEBUG = False
 
 ALLOWED_HOSTS = ['192.168.1.128']
 
@@ -59,6 +62,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'project_api.urls'
@@ -85,7 +89,7 @@ WSGI_APPLICATION = 'project_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-dbStr = os.environ['DB_USERNAME']+"://user:"+os.environ['DB_PW']+"@localhost.blog_db"
+dbStr = os.environ['DB_USERNAME']+"://user:"+os.environ['DB_PW']+"@localhost.tracker_db"
 
 if RUNNING_DEVSERVER:
     DATABASES = {
@@ -140,3 +144,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
