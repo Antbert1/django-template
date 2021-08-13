@@ -19,3 +19,10 @@ use pip install -Iv psycopg2==2.8.6 to avoid UTC error
 python3 manage.py runserver 192.168.1.128:8000
 
 for Windows: .\venv\Scripts\activate  
+
+Secret keys: https://stackoverflow.com/questions/15209978/where-to-store-secret-keys-django
+
+For dev vs production: In settings.py, 
+import sys
+RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+print("dev server {}".format(RUNNING_DEVSERVER))

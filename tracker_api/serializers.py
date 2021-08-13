@@ -5,4 +5,4 @@ from .models import Answer
 class AnswerSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Answer
-        fields = ('question', 'date', 'value')
+        fields = ('question', 'date', 'value', 'period')

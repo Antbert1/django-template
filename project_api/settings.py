@@ -11,16 +11,25 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 """
 
 import os
+import dotenv
+import sys
+import dj_database_url
+
+RUNNING_DEVSERVER = (len(sys.argv) > 1 and sys.argv[1] == 'runserver')
+print("dev server {}".format(RUNNING_DEVSERVER))
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# Add .env variables anywhere before SECRET_KEY
+dotenv_file = os.path.join(BASE_DIR, ".env")
+if os.path.isfile(dotenv_file):
+    dotenv.load_dotenv(dotenv_file)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '3z6(n65@-sy!6ix+z%m9^0bn#6clsce#1o0h@mounxgz(ds*+('
+SECRET_KEY = os.environ['SECRET_KEY']
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -76,15 +85,22 @@ WSGI_APPLICATION = 'project_api.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
-DATABASES = {
-    'default': {
+dbStr = os.environ['DB_USERNAME']+"://user:"+os.environ['DB_PW']+"@localhost.blog_db"
+
+if RUNNING_DEVSERVER:
+    DATABASES = {
+        'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'tracker_db',
-        'USER': 'postgres',
-        'PASSWORD': 'Zlx990810',
+        'USER': os.environ['DB_USERNAME'],
+        'PASSWORD': os.environ['DB_PW'],
         'HOST': 'localhost',
         }
-}
+    }
+else:
+    DATABASES = {'default': dj_database_url.config(default=dbStr)}
+
+
 
 
 # Password validation
